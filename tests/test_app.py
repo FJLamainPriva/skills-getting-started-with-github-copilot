@@ -34,3 +34,15 @@ def test_duplicate_signup_is_rejected():
     assert second_response.json() == {
         "detail": "Student is already signed up for this activity"
     }
+
+
+def test_participant_can_be_removed_from_activity():
+    client = TestClient(app)
+
+    response = client.delete("/activities/Chess Club/unregister?email=michael@mergington.edu")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "message": "Unregistered michael@mergington.edu from Chess Club"
+    }
+    assert "michael@mergington.edu" not in activities["Chess Club"]["participants"]
